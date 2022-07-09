@@ -22,4 +22,4 @@ inputs:
     default: "10s"
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "kskitek/screeps-pusher:v0.1-rc3"
