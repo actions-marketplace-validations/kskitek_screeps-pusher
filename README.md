@@ -53,6 +53,7 @@ name: Push released code
 on: tags
 jobs:
   push:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@master
@@ -74,6 +75,7 @@ name: Push experimental code
 on: pull_request
 jobs:
   push:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@master
