@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:1.18-alpine AS builder
 
 ARG LDFLAGS
 
@@ -12,6 +12,6 @@ RUN CGO_ENABLED=0 go build -ldflags="-w -s"
 
 FROM gcr.io/distroless/static-debian11
 
-COPY --from=builder /src/pusher /bin/pusher
+COPY --from=builder /src/screeps-pusher /bin/screeps-pusher
 
-ENTRYPOINT ["pusher"]
+ENTRYPOINT ["screeps-pusher"]
