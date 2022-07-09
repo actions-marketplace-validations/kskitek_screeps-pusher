@@ -1,0 +1,25 @@
+name: "screeps-pusher action"
+description: "Push JavaScript code into screeps.com"
+author: "Krzysztof Skitek"
+inputs:
+  branch:
+    description: "Destination branch in screeps."
+    required: true
+  token:
+    description: "Screeps API token. Can be obtained from account settings: https://screeps.com/a/#!/account/auth-tokens"
+    required: true
+  dir:
+    description: "Directory for .js files."
+    required: false
+    default: "./"
+  apiURL:
+    description: "Screeps server API URL"
+    required: false
+    default: "https://screeps.com/api/user/code"
+  timeout:
+    description: "HTTP Client timeout"
+    required: false
+    default: "10s"
+runs:
+  using: "docker"
+  image: "Dockerfile"
