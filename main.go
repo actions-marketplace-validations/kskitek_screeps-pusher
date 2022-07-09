@@ -2,8 +2,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/kelseyhightower/envconfig"
 	"io"
 	"io/ioutil"
 	"log"
@@ -13,6 +13,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/kelseyhightower/envconfig"
 )
 
 var VERSION string
@@ -102,7 +104,7 @@ func (r *filesReader) ToJson(branch string) io.Reader {
 		sb.WriteString(fileContent)
 		sb.WriteString(`", `)
 	}
-	sb.WriteString(`"empty":""`)
+	sb.WriteString(`"empty":""`) // just a lazy way of not dealing with dangling comma
 	sb.WriteString("}}")
 
 	return bytes.NewBufferString(sb.String())
@@ -128,7 +130,18 @@ func send(payload io.Reader, c config) error {
 		return fmt.Errorf("unable to send the code: Status: %d, Response: %s", resp.StatusCode, respBody)
 	}
 
+	var errBody errorBody
+	_ = json.NewDecoder(resp.Body).Decode(&errBody)
+	if errBody.Error != "" {
+		return fmt.Errorf("API returned an error: Status: %d, Response: %s", resp.StatusCode, errBody.Error)
+	}
+
+	log.Println("Code pushed successfully")
 	return nil
+}
+
+type errorBody struct {
+	Error string `json:"error"`
 }
 
 func prepareRequest(payload io.Reader, apiURL, token string) (*http.Request, error) {
@@ -137,11 +150,7 @@ func prepareRequest(payload io.Reader, apiURL, token string) (*http.Request, err
 		return nil, fmt.Errorf("unable to prepare request: %w", err)
 	}
 
-	//	basic := fmt.Sprintf("Basic %s:%s", email, password)
-	//	authHeader := base64.StdEncoding.EncodeToString([]byte(basic))
-
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
-	//req.Header.Add("Authorization", authHeader)
 	req.Header.Add("X-Token", token)
 	req.Header.Add("User-Agent", "screeps-pusher/"+VERSION)
 

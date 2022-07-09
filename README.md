@@ -5,8 +5,8 @@ It is a small utility program and GitHub Action to push JavaScript code into Scr
 ## Inputs
 | Input   | Description |
 |---------|-------------|
-| branch  | Required. Destination branch in screeps. |
-| token   | Required. Screeps API token. Can be obtained from account settings: https://screeps.com/a/#!/account/auth-tokens |
+| branch  | Required. Destination branch in screeps. Be aware that screeps does not create new branch automatically. |
+| token   | Required. Screeps API token. Can be obtained from account settings: https://screeps.com/a/#!/account/auth-tokens. |
 | dir     | Optional. Directory for .js files. |
 | apiURL  | Optional. Screeps server API URL. |
 | timeout | Optional. HTTP Client timeout. |
@@ -82,5 +82,5 @@ jobs:
       id: myaction
       uses: kskitek/screeps-pusher@v0.1
       with:
-        branch: ${{ github.ref_name }}
+        branch: ${{ github.ref_name }} # be aware that screeps does not create new branch automatically
         token: ${{ secrets.token }}
